@@ -5,7 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>OldFashionPound</artifactId>
+    <artifactId>old-fashion-pound-converter</artifactId>
+    <name>old-fashion-pound-converter</name>
     <version>1.0</version>
     <dependencies>
         <dependency>
