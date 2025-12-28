@@ -1,42 +1,69 @@
-### Old Fashion it.core.currencies.Pound
+# Old Fashion Pound
 
-This library allows you to use the 4 fundamental operations (sum,division,subtraction,multiplication) according to the old english monetary system used before the 70'.
+Small Java library for doing arithmetic on the pre-decimal British currency system:
 
-#### Legend
-- p = Pounds
-- s = Shellings
-- d = Pennies
-- result = Xp Ys Zd
+- `1 pound = 20 shillings`
+- `1 shilling = 12 pennies`
+- `1 pound = 240 pennies` (the internal base unit)
 
-Example: *12p 6s 10d* equals to 12 pounds, 6 shellings and 10 pennies.
+The project is primarily a library (`it.core.Amount` and `it.core.currencies.*`), plus a tiny demo entrypoint (`it.core.Main`).
 
-Notes:
-- that the result after a division operation will be shown as follows: *Xp Ys Zd (Xp Ys Zd)*.  
-Inside the parentheses will be shown the rest.
-- The subtract operation will throw a `NegativeAmountException` if the result is negative.
+## What it does
 
+`Amount` stores a value as a total number of pennies and provides the four basic operations:
 
--------------
+- `sum(Amount)` / `sumByString("Xp Ys Zd")`
+- `subtract(Amount)` (throws `NegativeAmountException` if the result is negative)
+- `multiply(int)`
+- `divide(int)` (returns quotient and remainder)
 
-### Example
+Operations return a `Result`:
 
+- `WholeResult`: a single formatted amount (`Xp Ys Zd`)
+- `FractionalResult`: a whole amount plus the remainder (`Xp Ys Zd (Xp Ys Zd)`)
+
+## Input / output format
+
+Formatting uses:
+
+- `p` = pounds
+- `s` = shillings
+- `d` = pennies
+
+Example: `12p 6s 10d` means 12 pounds, 6 shillings and 10 pennies.
+
+`Amount.sumByString(...)` parses exactly the format `Xp Ys Zd` (with spaces), e.g. `3p 4s 10d`.
+
+## Quickstart
+
+### Build and run tests
+
+Requires Java 13+ and Maven.
+
+```bash
+mvn test
 ```
-                final Penny penny = new Penny(9);
-                final Shilling shilling = new Shilling(8);
-                final Pound pound = new Pound(10);
-        
-                final Penny penny1 = new Penny(10);
-                final Shilling shilling1 = new Shilling(4);
-                final Pound pound1 = new Pound(3);
-        
-                final Amount first = new Amount(penny,shilling,pound);
-                final Amount second = new Amount(penny1,shilling1,pound1);
-                System.out.println(first.divide(7));
-                System.out.println(first.sumByString("3p 4s 10d"));
 
-      //Output: 1p 9s 9d (0p 0s 6d)
-                13p 13s 7d
+### Run the demo
+
+```bash
+mvn -q package
+java -cp target/classes it.core.Main
 ```
+
+## Usage example
+
+```java
+final Amount a = new Amount(new Penny(9), new Shilling(8), new Pound(10));
+System.out.println(a.divide(7));            // 1p 9s 9d (0p 0s 6d)
+System.out.println(a.sumByString("3p 4s 10d")); // 13p 13s 7d
+```
+
+## Code map
+
+- `src/main/java/it/core/Amount.java`: core arithmetic and formatting (pennies as base units)
+- `src/main/java/it/core/currencies/*`: `Penny`, `Shilling`, `Pound` conversions to base units
+- `src/main/java/it/core/result/*`: result types (`WholeResult`, `FractionalResult`)
 
 
 
